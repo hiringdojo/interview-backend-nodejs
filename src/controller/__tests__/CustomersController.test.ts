@@ -8,14 +8,19 @@ describe('CustomersController', () => {
       // Prepare
       const service = {
         findByFilter: jest.fn(() =>
-          Promise.resolve([
-            {
-              id: 'customerId',
-              name: 'name',
-              lastName: 'lastName',
-              email: 'email',
-            },
-          ])
+          Promise.resolve({
+            customers: [
+              {
+                id: 'customerId',
+                name: 'name',
+                lastName: 'lastName',
+                email: 'email',
+                gender: 'male',
+              },
+            ],
+            total: 1,
+            totalPages: 1,
+          })
         ),
       } as unknown as CustomersService;
 
@@ -34,7 +39,7 @@ describe('CustomersController', () => {
       expect(response).toEqual({
         statusCode: 200,
         isBase64Encoded: false,
-        body: '[{"id":"customerId","name":"name","lastName":"lastName","email":"email"}]',
+        body: '{"customers":[{"id":"customerId","name":"name","lastName":"lastName","email":"email","gender":"male"}],"total":1,"totalPages":1}',
       });
       expect(service.findByFilter).toBeCalledWith({
         name: 'A',

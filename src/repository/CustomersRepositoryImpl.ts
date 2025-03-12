@@ -11,6 +11,7 @@ type RandomUser = {
 
     last: string;
   };
+  gender: string;
 };
 
 export class CustomersRepositoryImpl implements CustomersRepository {
@@ -21,8 +22,21 @@ export class CustomersRepositoryImpl implements CustomersRepository {
     }
 
     return result.data.results
-      .filter((item: RandomUser) =>
-        item.name.first.toLowerCase().startsWith(customer.name.toLowerCase())
+      .filter(
+        (item: RandomUser) =>
+          (customer.name
+            ? item.name.first
+                .toLowerCase()
+                .startsWith(customer.name.toLowerCase())
+            : true) &&
+          (customer.lastName
+            ? item.name.last
+                .toLowerCase()
+                .startsWith(customer.lastName.toLowerCase())
+            : true) &&
+          (customer.gender
+            ? item.gender.toLowerCase() === customer.gender
+            : true)
       )
       .map(
         (item: RandomUser) =>
@@ -30,6 +44,7 @@ export class CustomersRepositoryImpl implements CustomersRepository {
             id: item.id.value,
             name: item.name.first,
             lastName: item.name.last,
+            gender: item.gender,
           })
       );
   }

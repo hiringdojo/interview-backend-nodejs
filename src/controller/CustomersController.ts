@@ -23,11 +23,15 @@ export class CustomersController {
     };
   }
 
-  apiResponseOk(customers: Customer[]) {
+  apiResponseOk(response: {
+    customers: Customer[];
+    total: number;
+    totalPages: number;
+  }) {
     return {
       statusCode: 200,
       isBase64Encoded: false,
-      body: JSON.stringify(customers),
+      body: JSON.stringify(response),
     };
   }
 }
