@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { CustomersRepository } from './CustomersRepository';
 import { Customer } from '../domain/Customer';
+import { CustomersRepository } from './CustomersRepository';
 
 type RandomUser = {
   id: {
@@ -20,9 +20,17 @@ export class CustomersRepositoryImpl implements CustomersRepository {
       return [];
     }
 
-    return result.data.results
-      .filter((item: RandomUser) =>
-        item.name.first.toLowerCase().startsWith(customer.name.toLowerCase())
+    const results: Customer[] = result.data.results
+      .filter(
+        (item: RandomUser) =>
+          (!customer.name ||
+            item.name.first
+              .toLowerCase()
+              .includes(customer.name.toLowerCase())) &&
+          (!customer.lastName ||
+            item.name.last
+              .toLowerCase()
+              .includes(customer.lastName.toLowerCase()))
       )
       .map(
         (item: RandomUser) =>
@@ -32,5 +40,6 @@ export class CustomersRepositoryImpl implements CustomersRepository {
             lastName: item.name.last,
           })
       );
+    return results.length > 0 ? results : [];
   }
 }
